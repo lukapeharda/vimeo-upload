@@ -2,11 +2,11 @@
  | Vimeo-Upload: Upload videos to your Vimeo account directly from a
  |               browser or a Node.js app
  |
- |  ╭───╮╭─╮  
- |  │   ││ │╭─╮╭──┬──┬─╮╭───╮╭───╮   
+ |  ╭───╮╭─╮
+ |  │   ││ │╭─╮╭──┬──┬─╮╭───╮╭───╮
  |  │   ││ │├─┤│ ╭╮ ╭╮ ││ ─ ││╭╮ │  ╭────────┬─────────────────────╮
- |  ╰╮  ╰╯╭╯│ ││ ││ ││ ││  ─┤│╰╯ │  | UPLOAD │ ▒▒▒▒▒▒▒▒▒▒▒░░░░ %75 | 
- |   ╰────╯ ╰─╯╰─╯╰─╯╰─╯╰───╯╰───╯  ╰────────┴─────────────────────╯                    
+ |  ╰╮  ╰╯╭╯│ ││ ││ ││ ││  ─┤│╰╯ │  | UPLOAD │ ▒▒▒▒▒▒▒▒▒▒▒░░░░ %75 |
+ |   ╰────╯ ╰─╯╰─╯╰─╯╰─╯╰───╯╰───╯  ╰────────┴─────────────────────╯
  |
  |
  | This project was released under Apache 2.0" license.
@@ -102,6 +102,7 @@
     - onComplete (function), handler for onComplete event
     - onProgress (function), handler for onProgress event
     - onError (function), handler for onError event
+    - onBeforeSend (function), handler for onBeforeSend event
 
     */
 
@@ -120,7 +121,8 @@
         retryHandler: new RetryHandler(),
         onComplete: function() {},
         onProgress: function() {},
-        onError: function() {}
+        onError: function() {},
+        onBeforeSend: function() {}
     }
 
     /**
@@ -148,6 +150,7 @@
      * @param {function} [options.onComplete] Callback for when upload is complete
      * @param {function} [options.onProgress] Callback for status for the in-progress upload
      * @param {function} [options.onError] Callback if upload fails
+     * @param {function} [options.onBeforeSend] Callback before the upload starts
      */
     var me = function(opts) {
 
@@ -247,6 +250,9 @@
         }
         xhr.onload = this.onContentUploadSuccess_.bind(this)
         xhr.onerror = this.onContentUploadError_.bind(this)
+
+        this.onBeforeSend(xhr)
+
         xhr.send(content)
     }
 
